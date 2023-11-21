@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortner</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+</head>
+
+<body>
+    <main>
+        <h1>URL Shortener</h1>
+        <form id="post-form">
+            {% csrf_token %}
+            <input type="text" name="link" id="link" placeholder="Enter url here">
+            <div class="buttons">
+                <button type="submit" id="shorten">Shorten</button>
+            </div>
+        </form>
+
+        <section id="section">
+            <h2 id="shortened_link"></h2>
+        </section>
+
+    </main>
+
+    <script type="text/javascript">
+        let form = document.getElementById("post-form");
+        let shortened_link = document.getElementById("shortened_link");
+        form.addEventListener('submit', shortenUrl);
+        function shortenUrl(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'create' %}",
+                data: $('#post-form').serialize(),
+                datatype: "json",
+                success: function (data) {
+                    shortened_link.innerText = 'localhost:8000/' + data;
+                }
+            })
+        }
+    </script>
+
+</body>
+
+</html>
